@@ -1,0 +1,22 @@
+<svg width="512" height="512" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Aclass icon">
+
+  <defs>
+    <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#16A34A"/>
+    </linearGradient>
+  </defs>
+  <path d="M16,181 Q70,152 120,185 L120,208 Q70,178 16,205 Z" fill="#16A34A"/>
+  <path d="M224,181 Q170,152 120,185 L120,208 Q170,178 224,205 Z" fill="#16A34A"/>
+  <rect x="46" y="122" width="40" height="82" fill="#2563EB"/>
+  <rect x="59" y="140" width="15" height="15" fill="#FFFFFF"/>
+  <path d="M100,45 L110,90 L110,186 L90,186 L90,90 Z" fill="#16A34A"/>
+  <path d="M120,34 L186,204 L54,204 Z M120,108 L156,174 L84,174 Z" fill="url(#brandGrad)" fill-rule="evenodd"/>
+  <path d="M14,176 Q70,148 120,181 L120,201 Q70,171 14,196 Z" fill="#2563EB"/>
+  <path d="M226,176 Q170,148 120,181 L120,201 Q170,171 226,196 Z" fill="#2563EB"/>
+  <polygon points="69.97,200.93 176.81,93.33 184.62,101.07 200,60 159.06,75.73 166.87,83.47 60.03,191.07" fill="#16A34A"/>
+  <path d="M186,88 L206,88 L206,150" fill="none" stroke="#2563EB" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="206" cy="98" r="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="3.5"/>
+  <circle cx="206" cy="120" r="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="3.5"/>
+  <circle cx="206" cy="150" r="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="3.5"/>
+</svg>

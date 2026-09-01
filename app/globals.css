@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0b0f19;
+  color: #e7ecff;
+}
+
+::selection {
+  background: #5b8dff;
+  color: #0b0f19;
+}
+
+.section-fade {
+  animation: fadeUp 0.7s ease-out both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-hover {
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(91, 141, 255, 0.5);
+  box-shadow: 0 20px 40px -20px rgba(91, 141, 255, 0.35);
+}
