@@ -24,17 +24,24 @@ async function setupDb() {
     return;
   }
 
-  // Check if schema already exists (look for the schools table)
-  const { rows } = await pool.query(
-    "SELECT to_regclass('public.schools') as exists"
-  );
-  if (rows[0].exists) {
-    console.log("Schema already exists — skipping migration.");
-    await pool.end();
-    return;
-  }
+  // Create a migrations tracking table so we only apply each migration once.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS __drizzle_migrations_applied (
+      filename TEXT PRIMARY KEY,
+      applied_at TIMESTAMP DEFAULT NOW()
+    )
+  `);
 
   for (const file of sqlFiles) {
+    const { rows } = await pool.query(
+      "SELECT 1 FROM __drizzle_migrations_applied WHERE filename = $1",
+      [file]
+    );
+    if (rows.length > 0) {
+      console.log(`Already applied: ${file}`);
+      continue;
+    }
+
     console.log(`Running migration: ${file}`);
     const sql = readFileSync(join(migrationsDir, file), "utf8");
     const statements = sql
@@ -45,6 +52,11 @@ async function setupDb() {
     for (const stmt of statements) {
       await pool.query(stmt);
     }
+
+    await pool.query(
+      "INSERT INTO __drizzle_migrations_applied (filename) VALUES ($1)",
+      [file]
+    );
   }
 
   console.log("Schema setup complete.");

@@ -55,7 +55,7 @@ export async function signupAction(formData: FormData) {
     slug = `${slug}-${Math.random().toString(36).slice(2, 7)}`;
   }
 
-  const [school] = await db.insert(schools).values({ name: schoolName, slug }).returning();
+  const [school] = await db.insert(schools).values({ name: schoolName, slug, schoolType }).returning();
 
   const passwordHash = await hashPassword(password);
   const [user] = await db

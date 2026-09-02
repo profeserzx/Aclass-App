@@ -30,7 +30,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: sh -c "npm install pg @types/pg && npm install && npx drizzle-kit generate && node scripts/setup-db.mjs && node scripts/seed.mjs && npm run dev -- -H 0.0.0.0"
+    command: sh -c "npm install pg @types/pg && npm install && npx drizzle-kit generate && node scripts/setup-db.mjs && node scripts/seed.mjs && node scripts/configure-mpesa.mjs && npm run dev -- -H 0.0.0.0"
 
 volumes:
   pgdata:

@@ -57,6 +57,10 @@ export const schools = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
     slug: varchar("slug", { length: 100 }).notNull(),
+    // "primary" or "high" — affects which curriculum grade levels and
+    // features are offered. High schools get the full feature set; primary
+    // schools are a simpler flow for now.
+    schoolType: varchar("school_type", { length: 20 }).notNull().default("high"),
     // Used to build parent/staff login emails, e.g. "1834@dawamu.ac.ke".
     // Nullable — admin sets this once from the dashboard.
     domain: varchar("domain", { length: 255 }),
