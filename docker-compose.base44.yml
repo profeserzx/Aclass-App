@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: aclass
+      POSTGRES_USER: aclass
+      POSTGRES_PASSWORD: aclass_dev_pw
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aclass"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  web:
+    image: node:22-slim
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.env.base44-defaults
+      - /run/base44/app.env
+    environment:
+      - BASE44_PUBLIC_HOST_SUFFIX=${BASE44_PUBLIC_HOST_SUFFIX}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "npm install pg @types/pg && npm install && npx drizzle-kit generate && node scripts/setup-db.mjs && node scripts/seed.mjs && npm run dev -- -H 0.0.0.0"
+
+volumes:
+  pgdata:
