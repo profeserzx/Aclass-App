@@ -50,7 +50,17 @@ async function setupDb() {
       .filter((s) => s.length > 0);
 
     for (const stmt of statements) {
-      await pool.query(stmt);
+      try {
+        await pool.query(stmt);
+      } catch (err) {
+        // Idempotency: if a type/table/index already exists from a prior
+        // run, skip it instead of aborting the whole migration.
+        if (err.message.includes("already exists") || err.message.includes("does not exist")) {
+          console.log(`  Skipping (idempotent): ${stmt.substring(0, 80).replace(/\n/g, " ")}...`);
+        } else {
+          throw err;
+        }
+      }
     }
 
     await pool.query(
