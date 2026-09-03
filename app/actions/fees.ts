@@ -4,8 +4,9 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { fees, students } from "@/db/schema";
+import { fees, students, emailLogs, schools } from "@/db/schema";
 import { getSession } from "@/lib/session";
+import { sendEmail, buildEmailHtml } from "@/lib/email";
 
 function revalidateFeeViews() {
   revalidatePath("/dashboard/fees");
@@ -62,6 +63,57 @@ export async function addFeeAction(formData: FormData) {
     dueDate,
     status,
   });
+
+  // Automatically email the parent about the new fee statement, unless the
+  // admin unchecked "Email the parent about this fee" on the form.
+  const notifyParent = formData.get("notifyParent") !== "off";
+  if (notifyParent && student.guardianEmail) {
+    const [school] = await db.select().from(schools).where(eq(schools.id, session.schoolId)).limit(1);
+    const schoolName = school?.name ?? "Aclass";
+    const schoolTagline = school?.tagline ?? null;
+    const studentName = `${student.firstName} ${student.lastName}`;
+    const subject = `New fee statement: ${description} — KES ${amount.toLocaleString()}`;
+    const bodyText = `A new fee statement has been added to your child's account:
+
+Fee: ${description}${term ? `\nTerm: ${term}` : ""}
+Amount: KES ${amount.toLocaleString()}
+Due date: ${dueDate}
+Status: ${status}
+
+You can view and pay this fee through the parent portal. If your school has M-Pesa payments enabled, you can pay directly from the portal with a simple PIN prompt to your phone.
+
+Log in to the parent portal to view details and make a payment.`;
+
+    try {
+      await sendEmail({
+        to: student.guardianEmail,
+        subject,
+        text: bodyText,
+        html: buildEmailHtml({ schoolName, schoolTagline, studentName, bodyText }),
+        fromName: schoolName,
+      });
+      await db.insert(emailLogs).values({
+        schoolId: session.schoolId,
+        sentBy: session.userId,
+        recipientEmail: student.guardianEmail,
+        recipientName: student.guardianName ?? `Parent of ${studentName}`,
+        subject,
+        body: bodyText,
+        status: "sent",
+      });
+    } catch (err) {
+      await db.insert(emailLogs).values({
+        schoolId: session.schoolId,
+        sentBy: session.userId,
+        recipientEmail: student.guardianEmail,
+        recipientName: student.guardianName ?? `Parent of ${studentName}`,
+        subject,
+        status: "failed",
+        error: err instanceof Error ? err.message : "Unknown error",
+      });
+    }
+  }
+
   // No redirect: called from /dashboard/fees itself.
   revalidateFeeViews();
 }
