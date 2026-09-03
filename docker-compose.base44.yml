@@ -27,10 +27,21 @@ services:
       - /run/base44/app.env
     environment:
       - BASE44_PUBLIC_HOST_SUFFIX=${BASE44_PUBLIC_HOST_SUFFIX}
+      - MPESA_CALLBACK_URL=https://3000-${BASE44_PUBLIC_HOST_SUFFIX}/api/mpesa/callback
+      - PLATFORM_MPESA_CALLBACK_URL=https://3000-${BASE44_PUBLIC_HOST_SUFFIX}/api/mpesa/platform-callback
     depends_on:
       db:
         condition: service_healthy
     command: sh -c "npm install pg @types/pg && npm install && npx drizzle-kit generate && node scripts/setup-db.mjs && node scripts/seed.mjs && node scripts/configure-mpesa.mjs && npm run dev -- -H 0.0.0.0"
+
+  cron:
+    image: alpine:3.20
+    restart: unless-stopped
+    command: >-
+      sh -c 'echo "0 8 * * * wget -q -O- http://web:3000/api/cron/fee-notifications" | crontab - && crond -f -l 2'
+    depends_on:
+      web:
+        condition: service_started
 
 volumes:
   pgdata:

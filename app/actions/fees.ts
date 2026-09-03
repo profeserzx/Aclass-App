@@ -4,9 +4,11 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { fees, students, emailLogs, schools } from "@/db/schema";
+import { fees, students, emailLogs, smsLogs, schools } from "@/db/schema";
 import { getSession } from "@/lib/session";
 import { sendEmail, buildEmailHtml } from "@/lib/email";
+import { sendSms } from "@/lib/sms";
+import { normalizeKenyanPhone } from "@/lib/mpesa";
 
 function revalidateFeeViews() {
   revalidatePath("/dashboard/fees");
@@ -64,14 +66,15 @@ export async function addFeeAction(formData: FormData) {
     status,
   });
 
-  // Automatically email the parent about the new fee statement, unless the
-  // admin unchecked "Email the parent about this fee" on the form.
+  // Fetch school once for both email and SMS notifications
+  const [school] = await db.select().from(schools).where(eq(schools.id, session.schoolId)).limit(1);
+  const schoolName = school?.name ?? "Aclass";
+  const schoolTagline = school?.tagline ?? null;
+  const studentName = `${student.firstName} ${student.lastName}`;
+
+  // Email the parent about the new fee statement
   const notifyParent = formData.get("notifyParent") !== "off";
   if (notifyParent && student.guardianEmail) {
-    const [school] = await db.select().from(schools).where(eq(schools.id, session.schoolId)).limit(1);
-    const schoolName = school?.name ?? "Aclass";
-    const schoolTagline = school?.tagline ?? null;
-    const studentName = `${student.firstName} ${student.lastName}`;
     const subject = `New fee statement: ${description} — KES ${amount.toLocaleString()}`;
     const bodyText = `A new fee statement has been added to your child's account:
 
@@ -111,6 +114,36 @@ Log in to the parent portal to view details and make a payment.`;
         status: "failed",
         error: err instanceof Error ? err.message : "Unknown error",
       });
+    }
+  }
+
+  // SMS the parent about the new fee statement
+  const sendSmsToParent = formData.get("sendSmsToParent") !== "off";
+  if (sendSmsToParent && student.guardianContact) {
+    const phone = normalizeKenyanPhone(student.guardianContact);
+    if (phone) {
+      const smsMessage = `New fee: ${description} - KES ${amount.toLocaleString()}. Due ${dueDate}. Pay via the parent portal. From ${schoolName}`;
+      try {
+        await sendSms({ to: phone, message: smsMessage });
+        await db.insert(smsLogs).values({
+          schoolId: session.schoolId,
+          sentBy: session.userId,
+          recipientPhone: phone,
+          recipientName: student.guardianName ?? `Parent of ${studentName}`,
+          message: smsMessage,
+          status: "sent",
+        });
+      } catch (err) {
+        await db.insert(smsLogs).values({
+          schoolId: session.schoolId,
+          sentBy: session.userId,
+          recipientPhone: phone,
+          recipientName: student.guardianName ?? `Parent of ${studentName}`,
+          message: smsMessage,
+          status: "failed",
+          error: err instanceof Error ? err.message : "Unknown error",
+        });
+      }
     }
   }
 

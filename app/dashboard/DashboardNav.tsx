@@ -36,10 +36,23 @@ const HIDDEN_LINKS: Record<string, Set<string>> = {
   teacher: new Set(["/dashboard/fees", "/dashboard/payments", "/dashboard/classes", "/dashboard/billing"]),
 };
 
-export default function DashboardNav({ role }: { role: string }) {
+// Primary schools don't use the KCSE gradebook or subject enrollment yet —
+// hide those until the primary curriculum module is built out.
+const PRIMARY_HIDDEN = new Set(["/dashboard/grades", "/dashboard/subjects"]);
+
+export default function DashboardNav({
+  role,
+  schoolType = "high",
+}: {
+  role: string;
+  schoolType?: string;
+}) {
   const pathname = usePathname();
-  const hidden = HIDDEN_LINKS[role];
-  const visibleLinks = hidden ? links.filter((l) => !hidden.has(l.href)) : links;
+  const hidden = new Set([
+    ...(HIDDEN_LINKS[role] ?? []),
+    ...(schoolType === "primary" ? PRIMARY_HIDDEN : []),
+  ]);
+  const visibleLinks = hidden.size > 0 ? links.filter((l) => !hidden.has(l.href)) : links;
 
   return (
     <nav className="flex flex-col gap-1">

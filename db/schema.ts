@@ -252,6 +252,10 @@ export const fees = pgTable("fees", {
   amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
   dueDate: date("due_date").notNull(),
   status: feeStatusEnum("status").notNull().default("pending"),
+  // Populated by the daily cron (app/api/cron/fee-notifications) so each fee
+  // only gets one "due in 3 days" reminder and one "overdue" notification.
+  reminderSentAt: timestamp("reminder_sent_at"),
+  overdueNotifiedAt: timestamp("overdue_notified_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
