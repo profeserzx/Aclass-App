@@ -5,6 +5,35 @@ import { join } from "path";
 const { Pool } = pg;
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
+// Returns true when the object a statement creates already exists, so the
+// statement can be skipped without ever hitting a Postgres error.
+async function alreadyApplied(stmt) {
+  let m;
+  if ((m = stmt.match(/^CREATE TYPE\s+"?(?:public"?\."?)?"?(\w+)"?\s/i))) {
+    const { rows } = await pool.query("SELECT 1 FROM pg_type WHERE typname = $1", [m[1]]);
+    return rows.length > 0;
+  }
+  if ((m = stmt.match(/^CREATE TABLE\s+(?:IF NOT EXISTS\s+)?"?(?:public"?\."?)?"?(\w+)"?\s/i))) {
+    const { rows } = await pool.query(
+      "SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = $1",
+      [m[1]]
+    );
+    return rows.length > 0;
+  }
+  if ((m = stmt.match(/^ALTER TABLE\s+"?(\w+)"?\s+ADD\s+COLUMN\s+"?(\w+)"?\s/i))) {
+    const { rows } = await pool.query(
+      "SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = $1 AND column_name = $2",
+      [m[1], m[2]]
+    );
+    return rows.length > 0;
+  }
+  if ((m = stmt.match(/^CREATE\s+(?:UNIQUE\s+)?INDEX\s+(?:IF NOT EXISTS\s+)?"?(\w+)"?\s/i))) {
+    const { rows } = await pool.query("SELECT 1 FROM pg_indexes WHERE indexname = $1", [m[1]]);
+    return rows.length > 0;
+  }
+  return false;
+}
+
 async function setupDb() {
   const migrationsDir = join(process.cwd(), "db", "migrations");
   let sqlFiles;
@@ -50,11 +79,17 @@ async function setupDb() {
       .filter((s) => s.length > 0);
 
     for (const stmt of statements) {
+      // Pre-check common "already exists" cases so we never send a statement
+      // Postgres will reject (rejected statements clutter the DB error log
+      // even when the client handles them gracefully).
+      if (await alreadyApplied(stmt)) {
+        console.log(`  Skipping (already in schema): ${stmt.substring(0, 80).replace(/\n/g, " ")}...`);
+        continue;
+      }
       try {
         await pool.query(stmt);
       } catch (err) {
-        // Idempotency: if a type/table/index already exists from a prior
-        // run, skip it instead of aborting the whole migration.
+        // Fallback idempotency for cases the pre-check doesn't cover.
         if (err.message.includes("already exists") || err.message.includes("does not exist")) {
           console.log(`  Skipping (idempotent): ${stmt.substring(0, 80).replace(/\n/g, " ")}...`);
         } else {
