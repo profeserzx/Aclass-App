@@ -40,3 +40,25 @@ body {
   border-color: rgba(91, 141, 255, 0.5);
   box-shadow: 0 20px 40px -20px rgba(91, 141, 255, 0.35);
 }
+
+/* Warm Trust landing page */
+.bg-warm {
+  background: linear-gradient(180deg, #FFFBF5 0%, #F5F0EB 100%);
+}
+
+.warm-card-hover {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.warm-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px -16px rgba(0, 109, 91, 0.18);
+}
+
+.warm-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.5;
+  pointer-events: none;
+}

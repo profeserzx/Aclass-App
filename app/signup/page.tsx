@@ -28,6 +28,23 @@ export default function SignupPage({
 
           <form action={signupAction} className="mt-6 space-y-4">
             <div>
+              <label className="mb-1.5 block text-sm text-white/70">School type</label>
+              <div className="grid grid-cols-2 gap-3">
+                <label className="cursor-pointer">
+                  <input type="radio" name="schoolType" value="high" defaultChecked className="peer sr-only" />
+                  <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm text-white/60 transition peer-checked:border-accent peer-checked:bg-accent/10 peer-checked:text-white">
+                    High School
+                  </div>
+                </label>
+                <label className="cursor-pointer">
+                  <input type="radio" name="schoolType" value="primary" className="peer sr-only" />
+                  <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm text-white/60 transition peer-checked:border-accent peer-checked:bg-accent/10 peer-checked:text-white">
+                    Primary School
+                  </div>
+                </label>
+              </div>
+            </div>
+            <div>
               <label htmlFor="schoolName" className="mb-1.5 block text-sm text-white/70">
                 School name
               </label>

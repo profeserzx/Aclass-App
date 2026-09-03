@@ -1,0 +1,32 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "secrets": [
+    {
+      "name": "GMAIL_USER",
+      "description": "Gmail address for sending email notifications (optional — only needed for the email feature)",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "GMAIL_APP_PASSWORD",
+      "description": "Gmail app password for sending email (optional — only needed for the email feature)",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "AT_USERNAME",
+      "description": "Africa's Talking username for SMS (optional — only needed for the SMS feature)",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "AT_API_KEY",
+      "description": "Africa's Talking API key for SMS (optional — only needed for the SMS feature)",
+      "requiredAtBoot": false
+    },
+    {
+      "name": "AT_SENDER_ID",
+      "description": "Africa's Talking sender ID or shortcode (optional)",
+      "requiredAtBoot": false
+    }
+  ]
+}

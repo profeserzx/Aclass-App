@@ -98,16 +98,21 @@ const pricing = [
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-ink bg-grid-glow">
+    <main className="relative min-h-screen overflow-hidden bg-warm font-sans text-warm-ink">
+      {/* Organic background shapes */}
+      <div className="warm-blob left-[-10%] top-[5%] h-80 w-80 bg-warm-border" />
+      <div className="warm-blob right-[-5%] top-[15%] h-96 w-96 bg-warm-border" />
+      <div className="warm-blob left-[20%] top-[60%] h-72 w-72 bg-warm-border" />
+
       {/* Nav */}
       <header className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
         <div className="flex items-center gap-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/aclass-horizontal-dark.svg" alt="Aclass" className="h-14 w-auto" />
+          <img src="/aclass-horizontal.svg" alt="Aclass" className="h-12 w-auto" />
         </div>
-        <nav className="hidden items-center gap-8 text-sm text-white/70 md:flex">
+        <nav className="hidden items-center gap-8 text-sm text-warm-muted md:flex">
           {nav.map((item) => (
-            <a key={item.label} href={item.href} className="transition hover:text-white">
+            <a key={item.label} href={item.href} className="transition hover:text-warm-green">
               {item.label}
             </a>
           ))}
@@ -115,13 +120,13 @@ export default function Home() {
         <div className="flex items-center gap-3">
           <a
             href="/login"
-            className="hidden rounded-full border border-white/15 px-4 py-2 text-sm text-white/80 transition hover:border-white/30 hover:text-white sm:block"
+            className="hidden text-sm font-medium text-warm-ink transition hover:text-warm-green sm:block"
           >
             Log in
           </a>
           <a
             href="#contact"
-            className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-ink transition hover:bg-accent2"
+            className="rounded-full bg-warm-card px-4 py-2 text-sm font-medium text-warm-ink shadow-sm ring-1 ring-warm-border transition hover:ring-warm-green"
           >
             Book a demo
           </a>
@@ -129,38 +134,38 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section id="product" className="relative z-10 mx-auto max-w-5xl px-6 pb-24 pt-16 text-center section-fade">
-        <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs text-white/70">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent2" />
+      <section id="product" className="relative z-10 mx-auto max-w-5xl px-6 pb-24 pt-12 text-center section-fade">
+        <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-warm-border bg-warm-card px-4 py-1.5 text-xs text-warm-muted">
+          <span className="h-1.5 w-1.5 rounded-full bg-warm-emerald" />
           Piloted at Dawamu School — built for what schools actually deal with
         </div>
-        <h1 className="text-balance text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-6xl">
+        <h1 className="font-serif text-balance text-4xl font-semibold leading-tight tracking-tight text-warm-ink sm:text-5xl md:text-6xl">
           Run your entire school
-          <span className="bg-gradient-to-r from-accent to-accent2 bg-clip-text text-transparent"> without the chaos</span>
+          <span className="text-warm-green"> without the chaos</span>
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg text-white/60">
+        <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-warm-muted">
           Aclass brings attendance, grades, fees, and parent communication into one system —
           built for schools that are done juggling spreadsheets, paper files, and apps that don&apos;t talk to each other.
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a
             href="#contact"
-            className="w-full rounded-full bg-accent px-7 py-3 text-sm font-semibold text-ink transition hover:bg-accent2 sm:w-auto"
+            className="w-full rounded-full bg-warm-green px-7 py-3 text-sm font-semibold text-white transition hover:bg-warm-emerald sm:w-auto"
           >
             Book a free demo
           </a>
           <a
             href="#features"
-            className="w-full rounded-full border border-white/15 px-7 py-3 text-sm font-medium text-white/80 transition hover:border-white/30 hover:text-white sm:w-auto"
+            className="w-full rounded-full bg-warm-card px-7 py-3 text-sm font-medium text-warm-ink shadow-sm ring-1 ring-warm-border transition hover:ring-warm-green sm:w-auto"
           >
             See what it does
           </a>
         </div>
       </section>
 
-      {/* Problem / Solution */}
+      {/* Stats */}
       <section className="relative z-10 mx-auto max-w-6xl px-6 py-16">
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 rounded-3xl bg-warm-sand p-8 md:grid-cols-3">
           {[
             {
               stat: "3+ hrs/week",
@@ -175,12 +180,9 @@ export default function Home() {
               label: "owed vs. paid, tracked across notebooks and spreadsheets",
             },
           ].map((item) => (
-            <div
-              key={item.label}
-              className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 card-hover"
-            >
-              <div className="text-2xl font-semibold text-accent2">{item.stat}</div>
-              <div className="mt-2 text-sm text-white/60">{item.label}</div>
+            <div key={item.label} className="text-center">
+              <div className="font-serif text-2xl font-semibold text-warm-green">{item.stat}</div>
+              <div className="mt-2 text-sm text-warm-muted">{item.label}</div>
             </div>
           ))}
         </div>
@@ -189,10 +191,11 @@ export default function Home() {
       {/* Features */}
       <section id="features" className="relative z-10 mx-auto max-w-7xl px-6 py-20">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          <span className="text-xs font-semibold uppercase tracking-widest text-warm-emerald">Features</span>
+          <h2 className="mt-3 font-serif text-3xl font-semibold tracking-tight text-warm-ink sm:text-4xl">
             Everything a school runs on. One platform.
           </h2>
-          <p className="mt-4 text-white/60">
+          <p className="mt-4 text-warm-muted">
             Five core modules, built from three years of watching real classrooms, real parents, and real admin
             offices deal with real problems.
           </p>
@@ -201,22 +204,22 @@ export default function Home() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 card-hover"
+              className="warm-card-hover rounded-2xl border border-warm-border bg-warm-card p-6"
             >
-              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 text-accent2">
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-warm-green/10">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.6}
                   stroke="currentColor"
-                  className="h-5 w-5"
+                  className="h-5 w-5 text-warm-green"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d={f.icon} />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium">{f.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/60">{f.desc}</p>
+              <h3 className="text-lg font-medium text-warm-ink">{f.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-warm-muted">{f.desc}</p>
             </div>
           ))}
         </div>
@@ -225,15 +228,21 @@ export default function Home() {
       {/* How it works */}
       <section id="how" className="relative z-10 mx-auto max-w-6xl px-6 py-20">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">From sign-up to running your term</h2>
-          <p className="mt-4 text-white/60">No IT department required.</p>
+          <span className="text-xs font-semibold uppercase tracking-widest text-warm-emerald">How it works</span>
+          <h2 className="mt-3 font-serif text-3xl font-semibold tracking-tight text-warm-ink sm:text-4xl">
+            From sign-up to running your term
+          </h2>
+          <p className="mt-4 text-warm-muted">No IT department required.</p>
         </div>
-        <div className="mt-14 grid gap-8 md:grid-cols-4">
+        <div className="mt-14 grid gap-8 sm:grid-cols-2">
           {steps.map((s) => (
-            <div key={s.step} className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-              <div className="text-sm font-semibold text-accent2">{s.step}</div>
-              <h3 className="mt-3 text-base font-medium">{s.title}</h3>
-              <p className="mt-2 text-sm text-white/60">{s.desc}</p>
+            <div
+              key={s.step}
+              className="relative overflow-hidden rounded-2xl border border-warm-border bg-warm-card p-6"
+            >
+              <div className="font-serif text-5xl font-bold text-warm-border">{s.step}</div>
+              <h3 className="mt-3 text-base font-medium text-warm-ink">{s.title}</h3>
+              <p className="mt-2 text-sm text-warm-muted">{s.desc}</p>
             </div>
           ))}
         </div>
@@ -242,8 +251,11 @@ export default function Home() {
       {/* Pricing */}
       <section id="pricing" className="relative z-10 mx-auto max-w-6xl px-6 py-20">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Simple pricing, built for Kenyan schools</h2>
-          <p className="mt-4 text-white/60">Start free. Pay as your school grows.</p>
+          <span className="text-xs font-semibold uppercase tracking-widest text-warm-emerald">Pricing</span>
+          <h2 className="mt-3 font-serif text-3xl font-semibold tracking-tight text-warm-ink sm:text-4xl">
+            Simple pricing, built for Kenyan schools
+          </h2>
+          <p className="mt-4 text-warm-muted">Start free. Pay as your school grows.</p>
         </div>
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {pricing.map((tier) => (
@@ -251,23 +263,29 @@ export default function Home() {
               key={tier.name}
               className={`relative rounded-2xl border p-8 ${
                 tier.highlight
-                  ? "border-accent bg-gradient-to-b from-accent/10 to-transparent"
-                  : "border-white/10 bg-white/[0.03]"
+                  ? "border-warm-green bg-warm-green text-white"
+                  : "border-warm-border bg-warm-card text-warm-ink"
               }`}
             >
               {tier.highlight && (
-                <span className="absolute -top-3 left-8 rounded-full bg-accent px-3 py-1 text-xs font-medium text-ink">
+                <span className="absolute -top-3 left-8 rounded-full bg-white px-3 py-1 text-xs font-medium text-warm-green">
                   Most popular
                 </span>
               )}
               <h3 className="text-lg font-medium">{tier.name}</h3>
-              <p className="mt-1 text-sm text-white/50">{tier.tagline}</p>
-              <div className="mt-6 text-3xl font-semibold">{tier.price}</div>
-              <ul className="mt-6 space-y-3 text-sm text-white/70">
+              <p className={`mt-1 text-sm ${tier.highlight ? "text-white/70" : "text-warm-muted"}`}>
+                {tier.tagline}
+              </p>
+              <div className="mt-6 font-serif text-3xl font-semibold">{tier.price}</div>
+              <ul className="mt-6 space-y-3 text-sm">
                 {tier.features.map((f) => (
                   <li key={f} className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent2" />
-                    {f}
+                    <span
+                      className={`mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full ${
+                        tier.highlight ? "bg-white/70" : "bg-warm-emerald"
+                      }`}
+                    />
+                    <span className={tier.highlight ? "text-white/90" : "text-warm-muted"}>{f}</span>
                   </li>
                 ))}
               </ul>
@@ -275,8 +293,8 @@ export default function Home() {
                 href="#contact"
                 className={`mt-8 block rounded-full px-5 py-2.5 text-center text-sm font-medium transition ${
                   tier.highlight
-                    ? "bg-accent text-ink hover:bg-accent2"
-                    : "border border-white/15 text-white/80 hover:border-white/30 hover:text-white"
+                    ? "bg-white text-warm-green hover:bg-white/90"
+                    : "border border-warm-border text-warm-ink hover:border-warm-green hover:text-warm-green"
                 }`}
               >
                 Get started
@@ -288,17 +306,17 @@ export default function Home() {
 
       {/* CTA */}
       <section id="contact" className="relative z-10 mx-auto max-w-4xl px-6 py-24 text-center">
-        <div className="rounded-3xl border border-white/10 bg-white/[0.03] px-8 py-14">
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+        <div className="rounded-3xl border border-warm-border bg-warm-card px-8 py-14">
+          <h2 className="font-serif text-3xl font-semibold tracking-tight text-warm-ink sm:text-4xl">
             Ready to run your school on Aclass?
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-white/60">
+          <p className="mx-auto mt-4 max-w-xl text-warm-muted">
             Tell us about your school and we&apos;ll set up a free workspace so you can try it before you commit to
             anything.
           </p>
           <a
             href="mailto:aclassschoolmanagement@gmail.com"
-            className="mt-8 inline-block rounded-full bg-accent px-7 py-3 text-sm font-semibold text-ink transition hover:bg-accent2"
+            className="mt-8 inline-block rounded-full bg-warm-green px-7 py-3 text-sm font-semibold text-white transition hover:bg-warm-emerald"
           >
             Book a free demo
           </a>
@@ -306,12 +324,12 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-white/10 px-6 py-10">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-sm text-white/40 sm:flex-row">
+      <footer className="relative z-10 bg-warm-green px-6 py-10">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-sm text-white/70 sm:flex-row">
           <span>© {new Date().getFullYear()} Aclass. Built in Kenya.</span>
           <div className="flex items-center gap-5">
-            <a href="/terms" className="hover:text-white/70">Terms of Service</a>
-            <a href="/privacy" className="hover:text-white/70">Privacy Policy</a>
+            <a href="/terms" className="hover:text-white">Terms of Service</a>
+            <a href="/privacy" className="hover:text-white">Privacy Policy</a>
             <span>aclassschoolmanagement@gmail.com</span>
           </div>
         </div>

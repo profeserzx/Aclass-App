@@ -57,6 +57,10 @@ export const schools = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
     slug: varchar("slug", { length: 100 }).notNull(),
+    // "primary" or "high" — affects which curriculum grade levels and
+    // features are offered. High schools get the full feature set; primary
+    // schools are a simpler flow for now.
+    schoolType: varchar("school_type", { length: 20 }).notNull().default("high"),
     // Used to build parent/staff login emails, e.g. "1834@dawamu.ac.ke".
     // Nullable — admin sets this once from the dashboard.
     domain: varchar("domain", { length: 255 }),
@@ -248,6 +252,10 @@ export const fees = pgTable("fees", {
   amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
   dueDate: date("due_date").notNull(),
   status: feeStatusEnum("status").notNull().default("pending"),
+  // Populated by the daily cron (app/api/cron/fee-notifications) so each fee
+  // only gets one "due in 3 days" reminder and one "overdue" notification.
+  reminderSentAt: timestamp("reminder_sent_at"),
+  overdueNotifiedAt: timestamp("overdue_notified_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
