@@ -206,6 +206,24 @@ export default async function FeesPage({
                   Overdue
                 </option>
               </select>
+              <label className="flex items-center gap-2 text-sm text-white/60">
+                <input
+                  type="checkbox"
+                  name="notifyParent"
+                  defaultChecked
+                  className="h-4 w-4 rounded border-white/20 bg-white/5 accent-emerald-500"
+                />
+                Email the parent about this fee
+              </label>
+              <label className="flex items-center gap-2 text-sm text-white/60">
+                <input
+                  type="checkbox"
+                  name="sendSmsToParent"
+                  defaultChecked
+                  className="h-4 w-4 rounded border-white/20 bg-white/5 accent-emerald-500"
+                />
+                SMS the parent about this fee
+              </label>
               <button
                 type="submit"
                 className="w-full rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-accent2"

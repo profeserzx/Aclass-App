@@ -1,0 +1,1 @@
+ALTER TABLE "schools" ADD COLUMN "school_type" varchar(20) DEFAULT 'high' NOT NULL;

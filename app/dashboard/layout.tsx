@@ -51,7 +51,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       </header>
       <div className="mx-auto flex max-w-7xl gap-8 px-6 py-10">
         <aside className="hidden w-56 shrink-0 md:block">
-          <DashboardNav role={session.role} />
+          <DashboardNav role={session.role} schoolType={school?.schoolType ?? "high"} />
         </aside>
         <main className="min-w-0 flex-1">{children}</main>
       </div>
